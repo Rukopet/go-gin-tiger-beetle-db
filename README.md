@@ -55,6 +55,24 @@ finance-api/
 
 ## Запуск
 
+### С Docker Compose (рекомендуется)
+
+```bash
+# Запустить все сервисы (включая TigerBeetle)
+make docker-dev
+
+# Остановить сервисы
+make docker-down
+
+# Показать логи
+make docker-logs
+
+# Показать логи TigerBeetle
+make tigerbeetle-logs
+```
+
+### Локальная разработка
+
 ```bash
 # Загрузить зависимости
 make mod-tidy
@@ -71,7 +89,9 @@ make help
 
 ## Тестирование API
 
-После запуска сервер будет доступен на `http://localhost:8080`
+После запуска сервисы будут доступны:
+- Finance API: `http://localhost:8080`
+- TigerBeetle: `localhost:3000`
 
 ```bash
 curl http://localhost:8080/health
