@@ -1,0 +1,10 @@
+bin/
+.git/
+.gitignore
+README.md
+Dockerfile
+docker-compose.yml
+.dockerignore
+*.log
+.env
+.DS_Store 
