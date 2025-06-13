@@ -1,0 +1,416 @@
+{
+    "info": {
+        "_postman_id": "finance-api-collection",
+        "name": "Finance API",
+        "description": "REST API для работы с финансовыми операциями через TigerBeetle",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080",
+            "type": "string"
+        },
+        {
+            "key": "accountId",
+            "value": "550e8400-e29b-41d4-a716-446655440000",
+            "type": "string"
+        },
+        {
+            "key": "transferId",
+            "value": "550e8400-e29b-41d4-a716-446655440001",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Health Check",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/health",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "health"
+                    ]
+                },
+                "description": "Проверка состояния сервиса"
+            }
+        },
+        {
+            "name": "Accounts",
+            "item": [
+                {
+                    "name": "Create Account",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    const responseJson = pm.response.json();",
+                                    "    if (responseJson.data && responseJson.data.id) {",
+                                    "        pm.collectionVariables.set('accountId', responseJson.data.id);",
+                                    "    }",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"currency\": \"USD\",\n    \"initial_balance\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/accounts",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "accounts"
+                            ]
+                        },
+                        "description": "Создание нового счета"
+                    }
+                },
+                {
+                    "name": "Get Account",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/accounts/{{accountId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "accounts",
+                                "{{accountId}}"
+                            ]
+                        },
+                        "description": "Получение информации о счете"
+                    }
+                },
+                {
+                    "name": "List Accounts",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/accounts?page=1&limit=10&currency=USD",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "accounts"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "currency",
+                                    "value": "USD"
+                                }
+                            ]
+                        },
+                        "description": "Получение списка счетов с пагинацией"
+                    }
+                },
+                {
+                    "name": "Get Account Balance",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/accounts/{{accountId}}/balance",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "accounts",
+                                "{{accountId}}",
+                                "balance"
+                            ]
+                        },
+                        "description": "Получение баланса счета"
+                    }
+                },
+                {
+                    "name": "Deposit to Account",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"amount\": 50000,\n    \"description\": \"Пополнение счета\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/accounts/{{accountId}}/deposit",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "accounts",
+                                "{{accountId}}",
+                                "deposit"
+                            ]
+                        },
+                        "description": "Пополнение счета"
+                    }
+                },
+                {
+                    "name": "Withdraw from Account",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"amount\": 25000,\n    \"description\": \"Снятие со счета\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/accounts/{{accountId}}/withdraw",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "accounts",
+                                "{{accountId}}",
+                                "withdraw"
+                            ]
+                        },
+                        "description": "Снятие со счета"
+                    }
+                },
+                {
+                    "name": "Get Account Statement",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/accounts/{{accountId}}/statement?date_from=2024-01-01&date_to=2024-12-31",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "accounts",
+                                "{{accountId}}",
+                                "statement"
+                            ],
+                            "query": [
+                                {
+                                    "key": "date_from",
+                                    "value": "2024-01-01"
+                                },
+                                {
+                                    "key": "date_to",
+                                    "value": "2024-12-31"
+                                }
+                            ]
+                        },
+                        "description": "Получение выписки по счету"
+                    }
+                }
+            ],
+            "description": "API для работы со счетами"
+        },
+        {
+            "name": "Transfers",
+            "item": [
+                {
+                    "name": "Create Transfer",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    const responseJson = pm.response.json();",
+                                    "    if (responseJson.data && responseJson.data.id) {",
+                                    "        pm.collectionVariables.set('transferId', responseJson.data.id);",
+                                    "    }",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"from_account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"to_account_id\": \"550e8400-e29b-41d4-a716-446655440002\",\n    \"amount\": 10000,\n    \"description\": \"Перевод между счетами\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/transfers",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "transfers"
+                            ]
+                        },
+                        "description": "Создание перевода между счетами"
+                    }
+                },
+                {
+                    "name": "Get Transfer",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/transfers/{{transferId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "transfers",
+                                "{{transferId}}"
+                            ]
+                        },
+                        "description": "Получение информации о переводе"
+                    }
+                },
+                {
+                    "name": "List Transfers",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/transfers?page=1&limit=10&account_id={{accountId}}&date_from=2024-01-01&date_to=2024-12-31",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "transfers"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "account_id",
+                                    "value": "{{accountId}}"
+                                },
+                                {
+                                    "key": "date_from",
+                                    "value": "2024-01-01"
+                                },
+                                {
+                                    "key": "date_to",
+                                    "value": "2024-12-31"
+                                }
+                            ]
+                        },
+                        "description": "Получение списка переводов с фильтрацией"
+                    }
+                }
+            ],
+            "description": "API для работы с переводами"
+        },
+        {
+            "name": "Statistics",
+            "item": [
+                {
+                    "name": "Get Summary Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/stats/summary",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "stats",
+                                "summary"
+                            ]
+                        },
+                        "description": "Получение общей статистики системы"
+                    }
+                }
+            ],
+            "description": "API для получения статистики"
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ]
+}
